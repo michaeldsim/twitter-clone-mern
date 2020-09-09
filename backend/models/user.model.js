@@ -18,12 +18,16 @@ const userSchema = new Schema( {
         type: String,
         required: true
     },
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'posts'
+    }],
     date: {
         type: Date,
         default: Date.now
     }
 })
 
-const user = mongoose.model('users', userSchema)
+const User = mongoose.model('users', userSchema)
 
-module.exports = user
+module.exports = User
