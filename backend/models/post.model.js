@@ -11,13 +11,12 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    liked_by: {
-        users: [{
+    liked_by: [{
             type: Schema.Types.ObjectId,
             ref: 'users',
             default: null
         }]
-    },
+    ,
     comments: [{
         type: Schema.Types.ObjectId,
         text: String,

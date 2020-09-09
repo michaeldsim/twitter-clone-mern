@@ -26,7 +26,9 @@ connection.once('open', () => {
 const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
 const registerRouter = require('./routes/register')
+const commentsRouter = require('./routes/comments');
 
+app.use('/comments', commentsRouter);
 app.use('/posts', postsRouter);
 app.use('/users', usersRouter);
 app.use('/register', registerRouter);
