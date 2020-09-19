@@ -29,6 +29,26 @@ const postSchema = new Schema({
     }
 })
 
+// when a post is created also populate user array with the post made
+// postSchema.pre('create', (next) => {
+//     this.model('users').update({
+//         $push: {
+//             {
+//                 _id:
+//                 posts: ""
+//             }
+//         }
+//     })
+//     next()
+// })
+
+
+// when a post is deleted update user array of posts to also remove said array
+postSchema.pre('deleteMany', (next) => {
+    this.model('users').update({
+    })
+})
+
 const Post = mongoose.model('post', postSchema)
 
 module.exports = Post

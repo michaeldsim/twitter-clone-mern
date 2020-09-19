@@ -28,6 +28,10 @@ const userSchema = new Schema( {
     }
 })
 
+userSchema.pre('deleteOne', (next) => {
+    this.model('posts').deleteMany({ user: this._id }, next)
+})
+
 const User = mongoose.model('users', userSchema)
 
 module.exports = User

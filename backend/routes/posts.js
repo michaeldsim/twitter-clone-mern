@@ -4,8 +4,8 @@ let User = require('../models/user.model')
 
 router.route('/').get((req, res) => {
     Post.find()
-    .then(posts => res.json(posts)
-    .catch(err => res.status(400).json(err)))
+    .then(posts => res.json(posts))
+    .catch(err => res.status(400).json("Error: " + err))
 })
 
 router.route('/:username').get((req, res) => {
@@ -24,7 +24,7 @@ router.route('/submit').post((req, res) => {
     const username = req.body.username
     const content = req.body.content
 
-    const newPost = new Post({
+    const newPost = Post.create({
         user: username,
         text: content
     })
@@ -41,16 +41,10 @@ router.route('/submit').post((req, res) => {
             .catch(err => res.status(400).json('Error: ' + err))
 })
 
-router.route('/remove').delete((req, res) => {
-    const id = req.body.id
+// router.route('/remove').delete((req, res) => {
+//     const id = req.body.id
 
-    Post.findById(id, (err, doc) => {
-        if(err) res.status(400).json("Error: " + err)
-        doc.deleteOne()
-        doc.save()
-        .then(() => res.json('Post has been deleted'))
-        .catch(err => res.status(400).json("Error: " + err))
-    })
-})
+    
+// })
 
 module.exports = router
