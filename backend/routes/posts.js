@@ -8,19 +8,7 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err))
 })
 
-router.route('/:username').get((req, res) => {
-    const username = req.params.username
-
-    Post.find()
-    .then(posts => {
-        res.json(posts.forEach(i => {
-            if(i.user === username) return i
-        }))
-    })
-    .catch(err => res.status(400).json(err))
-})
-
-router.route('/submit').post((req, res) => {
+router.route('/').post((req, res) => {
     const user = req.body.user
     const content = req.body.content
 
@@ -32,15 +20,28 @@ router.route('/submit').post((req, res) => {
     newPost.save()
     .then(() => {
         res.json("Post has been created successfully.")
-        User.findOne({_id: user}, (doc) => {
-         doc.posts.push(this._id)
+        User.findById(user, (err, doc) => {
+        if (err) res.status(400).json(err)
+         doc.posts.push(newPost)
          doc.save()
         })
     })
     .catch((err) => {
         if (err) res.status(200).json("Error: " + err)
     })
-
 })
+
+router.route('/').delete((req, res) => {
+    const id = req.body.id
+
+    Post.deleteOne({_id: id})
+    .then(() => {
+        res.status(200).json("Post removed successfully.")
+    })
+    .catch((err) => {
+        if (err) res.status(200).json("Error: " + err)
+    })
+})
+
 
 module.exports = router

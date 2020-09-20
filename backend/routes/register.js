@@ -4,7 +4,6 @@ let User = require('../models/user.model')
 
 router.route('/').post((req, res) => {
     const username = req.body.username
-    const email = req.body.email
     bcrypt.hash(req.body.password, 10, (err, hashed) => {
         if(err) {
             res.status(400).json('Error: ' + err)
@@ -13,7 +12,6 @@ router.route('/').post((req, res) => {
 
             const newUser = new User({
                 username,
-                email,
                 password
             })
         

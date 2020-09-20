@@ -11,12 +11,6 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    liked_by: [{
-            type: Schema.Types.ObjectId,
-            ref: 'users',
-            default: null
-        }]
-    ,
     comments: [{
         type: Schema.Types.ObjectId, 
         ref: 'comments'
@@ -30,13 +24,11 @@ const postSchema = new Schema({
 
 const Post = mongoose.model('posts', postSchema)
 
-postSchema.pre('save', (next) => {
-    this.model('users').findOne({_id: this.user}).populate('posts').exec((err, doc) => {
-        if (err) return err.json()
-    }, next())
+postSchema.post('deleteMany', (next) => {
+    this.model('comments').deleteMany({post: this._id}, next)
 })
 
-postSchema.pre('deleteMany', (next) => {
+postSchema.post('deleteOne', (next) => {
     this.model('comments').deleteMany({post: this._id}, next)
 })
 

@@ -9,11 +9,6 @@ const userSchema = new Schema( {
         trim: true,
         minlength: 3
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
     password: {
         type: String,
         required: true
@@ -30,8 +25,9 @@ const userSchema = new Schema( {
 
 const User = mongoose.model('users', userSchema)
 
-userSchema.pre('deleteOne', (next) => {
-    this.model('posts').deleteMany({ user: this._id }, next)
+userSchema.post('deleteOne', (next) => {
+    this.model('posts').deleteMany({ user: this._id }, next).exec()
+    this.model('comments').deleteMany({ user: this._id }, next).exec()
 })
 
 

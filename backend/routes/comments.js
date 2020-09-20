@@ -2,21 +2,21 @@ const router = require('express').Router()
 let Comment = require('../models/comment.model')
 let Post = require('../models/post.model')
 
-router.route('/').get((req, res) => {
+router.route('/list').get((req, res) => {
     Comment.find()
     .then(comments => res.json(comments))
     .catch(err => res.status(400).json(err))
 })
 
-router.route('/submit').post((req, res) => {
+router.route('/').post((req, res) => {
     const post = req.body.post
-    const user = req.body.username
+    const user = req.body.user
     const content = req.body.content
 
     const newComment = new Comment({
         post: post,
         user: user,
-        text: content
+        content: content
     })
 
     newComment.save()
@@ -30,5 +30,7 @@ router.route('/submit').post((req, res) => {
 })
     .catch(err => res.status(400).json(err))
 })
+
+router.route('/remove').delete()
 
 module.exports = router
