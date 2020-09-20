@@ -7,7 +7,7 @@ const postSchema = new Schema({
         ref: 'users',
         required: true
     },
-    text: {
+    content: {
         type: String,
         required: true
     },
@@ -18,37 +18,26 @@ const postSchema = new Schema({
         }]
     ,
     comments: [{
-        type: Schema.Types.ObjectId,
-        text: String,
-        ref: 'comments',
-        default: null
-    }],
+        type: Schema.Types.ObjectId, 
+        ref: 'comments'
+    }]
+    ,
     date: {
         type: Date,
         default: Date.now
     }
 })
 
-// when a post is created also populate user array with the post made
-// postSchema.pre('create', (next) => {
-//     this.model('users').update({
-//         $push: {
-//             {
-//                 _id:
-//                 posts: ""
-//             }
-//         }
-//     })
-//     next()
-// })
+const Post = mongoose.model('posts', postSchema)
 
-
-// when a post is deleted update user array of posts to also remove said array
-postSchema.pre('deleteMany', (next) => {
-    this.model('users').update({
-    })
+postSchema.pre('save', (next) => {
+    this.model('users').findOne({_id: this.user}).populate('posts').exec((err, doc) => {
+        if (err) return err.json()
+    }, next())
 })
 
-const Post = mongoose.model('post', postSchema)
+postSchema.pre('deleteMany', (next) => {
+    this.model('comments').deleteMany({post: this._id}, next)
+})
 
 module.exports = Post
