@@ -1,10 +1,12 @@
 const router = require('express').Router()
-let User = require('../models/user.model')
-let Post = require('../models/post.model')
-let Comment = require('../models/comment.model')
+const User = require('../models/user.model')
+const Post = require('../models/post.model')
+const jwt = require('jsonwebtoken')
+const Comment = require('../models/comment.model')
+const verify = require('./verify')
 
-router.route('/list').get((req, res) => {
-  User.find()
+router.route('/users/list').get(async (req, res) => {
+  await User.find()
     .then(users => {
       let response = []
 
@@ -19,13 +21,13 @@ router.route('/list').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err))
 });
 
-router.route('/').delete((req, res) => {
-  const id = req.body.id
+router.route('/users').delete(verify, (req, res) => {
+  const user = req.user
 
-  User.deleteOne({_id: id})
+  User.deleteOne({_id: user._id})
   .then(() => {
-    Post.deleteMany({user: id}).exec()
-    Comment.deleteMany({user: id}).exec()
+    Post.deleteMany({user: user._id}).exec()
+    Comment.deleteMany({user: user._id}).exec()
     res.json("User has been deleted successfully.")
   })
   .catch((err) => {

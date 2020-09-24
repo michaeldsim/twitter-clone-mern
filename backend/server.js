@@ -28,10 +28,16 @@ const usersRouter = require('./routes/users');
 const registerRouter = require('./routes/register')
 const commentsRouter = require('./routes/comments');
 
-app.use('/comments', commentsRouter);
-app.use('/posts', postsRouter);
-app.use('/users', usersRouter);
-app.use('/register', registerRouter);
+app.get('/api', (req, res) => {
+  res.json({
+    message: "Welcome to the API"
+  })
+})
+
+app.use('/api', commentsRouter);
+app.use('/api', postsRouter);
+app.use('/api', usersRouter);
+app.use('/api', registerRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)

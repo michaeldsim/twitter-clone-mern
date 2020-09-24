@@ -1,19 +1,21 @@
 const router = require('express').Router()
-let Post = require('../models/post.model')
-let User  = require('../models/user.model')
+const Post = require('../models/post.model')
+const User  = require('../models/user.model')
+const jwt = require('jsonwebtoken')
+const verify = require('./verify')
 
-router.route('/').get((req, res) => {
-    Post.find()
+router.route('/posts').get(async (req, res) => {
+    await Post.find()
     .then(posts => res.json(posts))
     .catch(err => res.status(400).json("Error: " + err))
 })
 
-router.route('/').post((req, res) => {
-    const user = req.body.user
+router.route('/posts').post(verify, (req, res) => {
+    const user = req.user
     const content = req.body.content
 
     const newPost = new Post({
-        user: user,
+        user: user._id,
         content: content
     })
     
@@ -31,10 +33,10 @@ router.route('/').post((req, res) => {
     })
 })
 
-router.route('/').delete((req, res) => {
-    const id = req.body.id
+router.route('/posts').delete(verify, async (req, res) => {
+    const user = req.user
 
-    Post.deleteOne({_id: id})
+    await Post.deleteOne({_id: user._id})
     .then(() => {
         res.status(200).json("Post removed successfully.")
     })
