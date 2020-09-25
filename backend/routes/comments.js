@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const Comment = require('../models/comment.model')
 const Post = require('../models/post.model')
-const jwt = require('jsonwebtoken')
 const verify = require('./verify')
 
 router.route('/comments/list').get(async (req, res) => {

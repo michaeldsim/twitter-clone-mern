@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const User = require('../models/user.model')
 const Post = require('../models/post.model')
-const jwt = require('jsonwebtoken')
 const Comment = require('../models/comment.model')
 const verify = require('./verify')
 

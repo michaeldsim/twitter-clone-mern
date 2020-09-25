@@ -1,7 +1,6 @@
 const router = require('express').Router()
 const Post = require('../models/post.model')
 const User  = require('../models/user.model')
-const jwt = require('jsonwebtoken')
 const verify = require('./verify')
 
 router.route('/posts').get(async (req, res) => {
