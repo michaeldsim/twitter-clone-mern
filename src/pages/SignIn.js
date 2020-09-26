@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+
+const axios = require('axios')
 
 function Copyright() {
   return (
@@ -47,9 +51,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+  const [data, setData] = useState({username: null, password: null})
   const classes = useStyles();
 
+  const handleChange = (name, value) => {
+    setData({
+      [name]: value
+    })
+  }
+
+  const handleSubmit = () => {
+    console.log(data)
+
+    axios.post('http://localhost:5000/api/login', data)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
+
   return (
+    <div>
+      <Navbar bg="dark" variant='dark'>
+        <Navbar.Brand href="/">Quacker</Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse>
+            <Nav className="mr-auto">
+            <Nav.Link href="/register">Register</Nav.Link>
+            <Nav.Link href="/login">Login</Nav.Link>
+            </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -59,17 +89,18 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit.bind(this)} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
+            onChange={e => handleChange(e.target.name, e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -81,6 +112,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e => handleChange(e.target.name, e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -95,14 +127,9 @@ export default function SignIn() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
+          <Grid container justify='center'>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -113,5 +140,6 @@ export default function SignIn() {
         <Copyright />
       </Box>
     </Container>
+    </div>
   );
 }
