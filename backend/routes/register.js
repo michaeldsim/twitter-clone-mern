@@ -23,13 +23,13 @@ router.route('/register').post((req, res) => {
     })
 })
 
-router.route('/login').post(async (req, res) => {
+router.route('/login').post((req, res) => {
 
-    const user = await User.findOne({username: req.body.username})
+    const user = User.findOne({username: req.body.username})
     // check if user exists
     if(!user) return res.status(400).json("Username or password is wrong")
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    const validPassword = bcrypt.compare(req.body.password, user.password)
     if(!validPassword) return res.status(400).json("Incorrect password")
 
     // create token

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+
+const axios = require('axios')
 
 function Copyright() {
   return (
@@ -47,7 +49,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  const [user, setUser] = useState({username: null})
+  const [password, setPassword] = useState({password: null})
+
   const classes = useStyles();
+
+  const handleChange = (e) => {
+    if(e.target.name === 'username') setUser({username: e.target.value})
+    if(e.target.name === 'password') setPassword({password: e.target.value})
+  }
+
+  const handleSubmit = () => {
+    const data = JSON.stringify({
+      username: user.username,
+      password: password.password
+    })
+
+    console.log(data)
+
+    axios.post('http://localhost:5000/api/register', data)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+  }
 
   return (
     <div>
@@ -70,7 +93,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit.bind(this)} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -81,6 +104,7 @@ export default function SignUp() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                onChange={handleChange.bind(this)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -93,6 +117,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handleChange.bind(this)}
               />
             </Grid>
           </Grid>

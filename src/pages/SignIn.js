@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -51,17 +49,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
-  const [data, setData] = useState({username: null, password: null})
+  const [user, setUser] = useState({username: null})
+  const [password, setPassword] = useState({password: null})
+
   const classes = useStyles();
 
-  const handleChange = (name, value) => {
-    setData({
-      [name]: value
-    })
+  const handleChange = (e) => {
+    if(e.target.name === 'username') setUser({username: e.target.value})
+    if(e.target.name === 'password') setPassword({password: e.target.value})
   }
 
   const handleSubmit = () => {
-    console.log(data)
+    const data = JSON.stringify({
+      username: user.username,
+      password: password.password
+    })
 
     axios.post('http://localhost:5000/api/login', data)
     .then(res => console.log(res))
@@ -100,7 +102,7 @@ export default function SignIn() {
             name="username"
             autoComplete="username"
             autoFocus
-            onChange={e => handleChange(e.target.name, e.target.value)}
+            onChange={handleChange.bind(this)}
           />
           <TextField
             variant="outlined"
@@ -112,11 +114,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={e => handleChange(e.target.name, e.target.value)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            onChange={handleChange.bind(this)}
           />
           <Button
             type="submit"
@@ -142,4 +140,4 @@ export default function SignIn() {
     </Container>
     </div>
   );
-}
+  }
