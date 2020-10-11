@@ -29,6 +29,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  response: {
+    marginTop: theme.spacing(3)
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -49,8 +52,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
-  const [user, setUser] = useState({username: null})
-  const [password, setPassword] = useState({password: null})
+  const [user, setUser] = useState({username: ''})
+  const [password, setPassword] = useState({password: ''})
+  const [responseStatus, setStatus] = useState({status: ''})
 
   const classes = useStyles();
 
@@ -59,17 +63,25 @@ export default function SignUp() {
     if(e.target.name === 'password') setPassword({password: e.target.value})
   }
 
-  const handleSubmit = () => {
-    const data = JSON.stringify({
-      username: user.username,
-      password: password.password
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const data = {
+    username: user.username,
+    password: password.password
+    }
+
+    const config = {
+      'Content-Type' : 'application/json'
+    }
+
+    axios.post('http://localhost:5000/api/register', data, config)
+    .then(res => {
+      setStatus({status: res.data})
     })
-
-    console.log(data)
-
-    axios.post('http://localhost:5000/api/register', data)
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .catch(err => {
+      setStatus({status: 'Username is either not long enough or already exists'})
+    })
   }
 
   return (
@@ -93,15 +105,20 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit.bind(this)} noValidate>
+        <div className={classes.response}>
+          <p>
+            {responseStatus.status}
+          </p>
+        </div>
+        <form className={classes.form} method='post' onSubmit={handleSubmit.bind(this)} >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
                 required
+                variant="outlined"
                 fullWidth
                 id="username"
-                label="Username"
+                label="Username (3 chars. min)"
                 name="username"
                 autoComplete="username"
                 onChange={handleChange.bind(this)}
@@ -109,8 +126,8 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                variant="outlined"
                 required
+                variant="outlined"
                 fullWidth
                 name="password"
                 label="Password"

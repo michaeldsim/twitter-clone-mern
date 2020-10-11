@@ -6,7 +6,7 @@ const verify = require('./verify')
 router.route('/posts').get(async (req, res) => {
     await Post.find()
     .then(posts => res.json(posts))
-    .catch(err => res.status(400).json("Error: " + err))
+    .catch(err => res.status(400).json(err))
 })
 
 router.route('/posts').post(verify, (req, res) => {
@@ -28,7 +28,7 @@ router.route('/posts').post(verify, (req, res) => {
         })
     })
     .catch((err) => {
-        if (err) res.status(200).json("Error: " + err)
+        if (err) res.status(200).json(err)
     })
 })
 
@@ -40,7 +40,7 @@ router.route('/posts').delete(verify, async (req, res) => {
         res.status(200).json("Post removed successfully.")
     })
     .catch((err) => {
-        if (err) res.status(200).json("Error: " + err)
+        if (err) res.status(200).json(err)
     })
 })
 

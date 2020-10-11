@@ -17,7 +17,7 @@ router.route('/users/list').get(async (req, res) => {
     })
     res.json(response)
   })
-    .catch(err => res.status(400).json('Error: ' + err))
+    .catch(err => res.status(400).json(err))
 });
 
 router.route('/users').delete(verify, (req, res) => {
@@ -30,7 +30,7 @@ router.route('/users').delete(verify, (req, res) => {
     res.json("User has been deleted successfully.")
   })
   .catch((err) => {
-    res.status(400).json("Error: " + err)
+    res.status(400).json(err)
   })
 })
 

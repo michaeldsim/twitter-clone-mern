@@ -40,7 +40,7 @@ router.route('/comments').delete(verify, async (req, res) => {
     .then(() => {
         res.json('Comment deleted successfully')
     })
-    .catch((err) => res.status(400).json("Error: " + err))
+    .catch((err) => res.status(400).json(err))
 })
 
 module.exports = router

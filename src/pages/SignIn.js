@@ -29,6 +29,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  response: {
+    marginTop: theme.spacing(3)
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -51,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const [user, setUser] = useState({username: null})
   const [password, setPassword] = useState({password: null})
+  const [error, setError] = useState({error: ''})
 
   const classes = useStyles();
 
@@ -59,15 +63,20 @@ export default function SignIn() {
     if(e.target.name === 'password') setPassword({password: e.target.value})
   }
 
-  const handleSubmit = () => {
-    const data = JSON.stringify({
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    
+    const data = {
       username: user.username,
       password: password.password
-    })
+    }
 
     axios.post('http://localhost:5000/api/login', data)
     .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err.response)
+      setError({error: err.response.data})
+    })
   }
 
   return (
@@ -91,7 +100,12 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit.bind(this)} noValidate>
+        <div className={classes.response}>
+          <p>
+            {error.error}
+          </p>
+        </div>
+        <form className={classes.form} onSubmit={handleSubmit.bind(this)} >
           <TextField
             variant="outlined"
             margin="normal"

@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 let User = require('../models/user.model')
 
-router.route('/register').post((req, res) => {
+router.route('/register').post(async (req, res) => {
     const username = req.body.username
-    bcrypt.hash(req.body.password, 10, (err, hashed) => {
+    await bcrypt.hash(req.body.password, 10, (err, hashed) => {
         if(err) {
-            res.status(400).json('Error: ' + err)
+            res.status(400).json(err)
         } else {
             const password = hashed
 
@@ -23,14 +23,14 @@ router.route('/register').post((req, res) => {
     })
 })
 
-router.route('/login').post((req, res) => {
+router.route('/login').post(async (req, res) => {
 
-    const user = User.findOne({username: req.body.username})
+    const user = await User.findOne({username: req.body.username})
     // check if user exists
     if(!user) return res.status(400).json("Username or password is wrong")
 
-    const validPassword = bcrypt.compare(req.body.password, user.password)
-    if(!validPassword) return res.status(400).json("Incorrect password")
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if(!validPassword) return res.status(400).json("Username or password is wrong")
 
     // create token
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET, {expiresIn: '1h'})
