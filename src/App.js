@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom'
+import thunk from 'redux-thunk'
 
 // Pages
 import {Home} from './pages/Home'
@@ -8,8 +9,24 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import './App.css';
 
-function App() {
-  return (
+import {createStore, applyMiddleware, compose} from 'redux'
+import {Provider} from 'react-redux'
+import allReducer from './reducers'
+import { loadUser } from './actions/authActions'
+
+const middleware = [thunk]
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const store = createStore(allReducer, composeEnhancers(applyMiddleware(...middleware)))
+
+class App extends Component {
+  componentDidMount() {
+    store.dispatch(loadUser())
+  }
+
+  render() {
+    return(
+    <Provider store={store}>
     <Router>
       <Switch>
         <Route exact path='/' component={Home} />
@@ -19,7 +36,9 @@ function App() {
         <Redirect to="/404" />
       </Switch>
     </Router>
-  );
+    </Provider>
+    )  
+}
 }
 
 export default App;
