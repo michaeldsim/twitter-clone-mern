@@ -74,7 +74,6 @@ export default function SignIn() {
     axios.post('http://localhost:5000/api/login', data)
     .then(res => console.log(res))
     .catch(err => {
-      console.log(err.response)
       setError({error: err.response.data})
     })
   }

@@ -12,8 +12,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import PropTypes from 'prop-types'
 
 const axios = require('axios')
+
 
 function Copyright() {
   return (
@@ -163,3 +165,12 @@ export default function SignUp() {
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  isAuthenticated : state.isAuthenticated,
+  error: state.error
+})
+
+const connect({
+  mapStateToProps
+}) (SignUp)

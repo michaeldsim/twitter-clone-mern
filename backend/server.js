@@ -24,7 +24,7 @@ connection.once('open', () => {
 
 const postsRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
-const registerRouter = require('./routes/register')
+const authRouter = require('./routes/auth');
 const commentsRouter = require('./routes/comments');
 
 app.get('/api', (req, res) => {
@@ -36,7 +36,7 @@ app.get('/api', (req, res) => {
 app.use('/api', commentsRouter);
 app.use('/api', postsRouter);
 app.use('/api', usersRouter);
-app.use('/api', registerRouter);
+app.use('/api/auth', authRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)

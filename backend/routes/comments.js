@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const Comment = require('../models/comment.model')
 const Post = require('../models/post.model')
-const verify = require('./verify')
+const auth = require('../middleware/auth')
 
 router.route('/comments/list').get(async (req, res) => {
     await Comment.find()
@@ -9,7 +9,7 @@ router.route('/comments/list').get(async (req, res) => {
     .catch(err => res.status(400).json(err))
 })
 
-router.route('/comments').post(verify, (req, res) => {
+router.route('/comments').post(auth, (req, res) => {
     const post = req.body.post
     const user = req.user
     const content = req.body.content
@@ -32,7 +32,7 @@ router.route('/comments').post(verify, (req, res) => {
     .catch(err => res.status(400).json(err))
 })
 
-router.route('/comments').delete(verify, async (req, res) => {
+router.route('/comments').delete(auth, async (req, res) => {
     const id = req.body.id
     const user = req.user
 

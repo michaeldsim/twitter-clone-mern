@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const Post = require('../models/post.model')
 const User  = require('../models/user.model')
-const verify = require('./verify')
+const auth = require('../middleware/auth')
 
 router.route('/posts').get(async (req, res) => {
     await Post.find()
@@ -9,7 +9,7 @@ router.route('/posts').get(async (req, res) => {
     .catch(err => res.status(400).json(err))
 })
 
-router.route('/posts').post(verify, (req, res) => {
+router.route('/posts').post(auth, (req, res) => {
     const user = req.user
     const content = req.body.content
 
@@ -32,7 +32,7 @@ router.route('/posts').post(verify, (req, res) => {
     })
 })
 
-router.route('/posts').delete(verify, async (req, res) => {
+router.route('/posts').delete(auth, async (req, res) => {
     const user = req.user
 
     await Post.deleteOne({_id: user._id})
